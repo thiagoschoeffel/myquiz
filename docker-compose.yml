@@ -1,0 +1,35 @@
+version: "3.7"
+
+services:
+  app:
+    build:
+      args:
+        user: thiagoschoeffel
+        uid: 1000
+      context: .
+      dockerfile: Dockerfile
+    image: quiz
+    container_name: quiz-app
+    ports:
+      - 8000:80
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8
+    container_name: quiz-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+
+  adminer:
+    image: adminer
+    container_name: quiz-adminer
+    ports:
+      - 8001:8080
+    depends_on:
+      - db
